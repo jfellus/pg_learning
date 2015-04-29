@@ -3,6 +3,7 @@ Include src/SVQ.h
 Include src/Normalize.h
 Include src/Histogram.h
 Include src/SigmaPi.h
+Include src/NNRecorder.h
 Library libpg_learning.so
 CFLAG -fopenmp
 LDFLAG -fopenmp 

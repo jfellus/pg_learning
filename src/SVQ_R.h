@@ -41,13 +41,13 @@ public:
 
 	void process(const Matrix& inputs, float vigilance) {
 		if(!activities) {
-			prototypes.init(nbMaxClusters, inputs.w); prototypes.h=0;
-			activities.init(nbMaxClusters, 1); activities.h=0;
+			prototypes.init(nbMaxClusters, inputs.w); prototypes.set_height(0);
+			activities.init(nbMaxClusters, 1); activities.set_height(0);
 			winners.init(inputs.h, 1);
 		}
 
 		// Compute winners and recruit
-		winners.h = inputs.h;
+		winners.set_height(inputs.h);
 		#pragma omp parallel for
 		for(uint i=0; i<inputs.h; i++) {
 			const float* x = inputs.get_row(i);

@@ -41,25 +41,26 @@ public:
 	void init() {}
 
 	void process(const Matrix& inputs) {
+		if(inputs.h > winners.h) {	activities.free();	winners.free();	}
+		if(!prototypes) {prototypes.init(K, inputs.w); prototypes.set_height(0);}
 		if(!activities) {
-			prototypes.init(K, inputs.w);
 			activities.init(inputs.h, K);
 			winners.init(inputs.h, 2);
-			prototypes.h = 0;
-			activities.h = 0;
+			activities.set_height(0);
+			winners.set_height(0);
 		}
 
 		// Compute and Adapt winners
 		// NOTE : Prototypes initialization of  by recruiting the K first inputs
-		winners.h = activities.h = inputs.h;
+		winners.set_height(inputs.h); activities.set_height(inputs.h);
 		for(uint i=0; i<inputs.h; i++) {
 			const float* x = inputs.get_row(i);
 			if(prototypes.h < K) {
 				memcpy(prototypes.get_row(prototypes.h), inputs.get_row(i), inputs.w * sizeof(float));
-				prototypes.h++;
+				prototypes.set_height(prototypes.h+1);
 			} else {
 				int winner = compute_winner(x);
-				winners(i,0) = winner;
+				winners(i,0) = (int)winner;
 				winners(i,1) = compute_activity(dist(prototypes.get_row(winner), x, prototypes.w));
 			}
 		}
