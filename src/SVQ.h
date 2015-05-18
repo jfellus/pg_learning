@@ -61,7 +61,7 @@ public:
 			} else {
 				int winner = compute_winner(x);
 				winners(i,0) = (int)winner;
-				winners(i,1) = compute_activity(dist(prototypes.get_row(winner), x, prototypes.w));
+				winners(i,1) = winner==-1 ? 0 : compute_activity(dist(prototypes.get_row(winner), x, prototypes.w));
 			}
 		}
 
@@ -89,8 +89,7 @@ private:
 			float d = dist(prototypes.get_row(k), x, prototypes.w);
 			if(d <= min_dist) { min_dist = d; winner = k; }
 		}
-		adapt(winner, x);
-		//DBG(min_dist);
+		if(winner!=-1) adapt(winner, x);
 		return winner;
 	}
 

@@ -1,12 +1,12 @@
 /*
- * NNRecorder.h
+ * DOTRecorder.h
  *
  *  Created on: 28 avr. 2015
  *      Author: jfellus
  */
 
-#ifndef NNRECORDER_H_
-#define NNRECORDER_H_
+#ifndef DOTRECORDER_H_
+#define DOTRECORDER_H_
 
 
 #include <pg.h>
@@ -15,7 +15,7 @@
 #include <vector>
 
 
-class NNRecorder {
+class DotRecorder {
 public:
 	uint max;
 	Matrix records;
@@ -31,7 +31,7 @@ public:
 	OUTPUT(std::vector<ImageRGB>, imgs);
 
 public:
-	NNRecorder() {
+	DotRecorder() {
 		max = 100;
 		winner = -1;
 	}
@@ -82,19 +82,18 @@ public:
 
 private:
 
-	float dist(const float* a, const float* b, uint dim) {
+	float dot(const float* a, const float* b, uint dim) {
 		float d = 0;
-		for(uint i=dim; i--;) d += (a[i]-b[i])*(a[i]-b[i]);
+		for(uint i=dim; i--;) d += a[i]*b[i];
 		return d / dim;
 	}
 
 	int compute_winner(const float* x) {
 		int winner = -1;
-		float min_dist = FLT_MAX;
+		float max_dot = -FLT_MAX;
 		for(uint k=0; k<records.h; k++) {
-			float d = dist(records.get_row(k), x, records.w);
-			activities[k] = MAX(1-d*20, 0);
-			if(d <= min_dist) { min_dist = d; winner = k; }
+			activities[k] = dot(records.get_row(k), x, records.w);
+			if(activities[k] >= max_dot) { max_dot = activities[k]; winner = k; }
 		}
 		return winner;
 	}
