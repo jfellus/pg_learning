@@ -7,6 +7,9 @@ Include src/NNRecorder.h
 Include src/VLAT.h
 Include src/Codebook.h
 Include src/DotRecorder.h
+Include src/LinearSVM.h
+Include src/Kmeans.h
+Include src/NNClassifier.h
 Library libpg_learning.so
 CFLAG -fopenmp
 LDFLAG -fopenmp 

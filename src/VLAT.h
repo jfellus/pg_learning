@@ -79,7 +79,7 @@ public:
 		compute_winners(descriptors);
 
 		// Compute VLAT
-		signature = 0;
+		signature.clear();
 		for(uint i=descriptors.h; i--;) append_vlat(descriptors.get_row(i), winners(i,0));
 	}
 
@@ -104,7 +104,9 @@ private:
 		if(descriptors.h > winners.h) winners.free();
 		if(!winners) winners.init(descriptors.h, 1);
 		winners.set_height(descriptors.h);
-		for(uint i=descriptors.h; i--;) winners(i,0) = compute_winner(descriptors.get_row(i));
+
+#pragma omp parallel for
+		for(uint i=0; i<descriptors.h; i++) winners(i,0) = compute_winner(descriptors.get_row(i));
 	}
 
 	void append_vlat(const float* descriptor, uint cluster) {

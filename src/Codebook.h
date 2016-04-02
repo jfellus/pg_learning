@@ -46,7 +46,7 @@ public:
 
 	/** Compute codebook and save mean tensors to file
 	 *  NOTE : If a <path> is provided, use its tensors instead of estimating */
-	void process(const Matrix& descriptors, const Matrix& winners, bool bSave = false) {
+	void process(const Matrix& descriptors, const Matrix& winners, bool bSave = true) {
 		if(mean_tensors.empty()) {
 			if(!path.empty() && !learn) {
 				read_matrix_list(path, mean_tensors);
@@ -61,8 +61,10 @@ public:
 
 		if(!path.empty() && !learn) return; // No learning if <path> provided
 
-		if(order>=1) for(uint i=descriptors.h; i--;) vec_add(mean_tensors[0], descriptors.get_row(i), descriptors.w);
-		if(order>=2) for(uint i=descriptors.h; i--;) vec_add_tensor2(mean_tensors[1], descriptors.get_row(i), descriptors.w);
+		if(order>=1) for(uint i=descriptors.h; i--;) vec_add(mean_tensors[0].get_row(winners[i]), descriptors.get_row(i), descriptors.w);
+		if(order>=2) for(uint i=descriptors.h; i--;) {
+			vec_add_tensor2(mean_tensors[1].get_row(winners[i]), descriptors.get_row(i), descriptors.w);
+		}
 		nb += descriptors.h;
 
 		if(bSave && !out_file.empty()) {
